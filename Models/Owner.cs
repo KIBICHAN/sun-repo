@@ -16,7 +16,7 @@ public class Owner{
     [StringLength(20)]
     [Required]
     public string Email{get; set;} = string.Empty;
-    [StringLength(200)]
+    [MaxLength]
     public string OwnerImgUrl{get; set;} = string.Empty;
     
     //One-to-Many Relationship

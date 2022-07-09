@@ -17,11 +17,7 @@ public class PostController : ControllerBase{
     [HttpGet]
     public async Task<ActionResult<List<Post>>> GetAll(){
         var posts = await _context.Posts
-        .Include(p => p.PostStatus)
-        .Include(p => p.PostType)
         .Include(p => p.Apartment)
-        .ThenInclude(p => p.Building)
-        .Include(p => p.Owner)
         .ToListAsync();
         return Ok(posts);
     }
@@ -32,8 +28,26 @@ public class PostController : ControllerBase{
         .Include(p => p.PostStatus)
         .Include(p => p.PostType)
         .Include(p => p.Apartment)
-        .ThenInclude(p => p.Building)
+        .ThenInclude(p => p!.Building)
         .Include(p => p.Owner).FirstOrDefaultAsync(p => p.PostId == id);
         return Ok(post);
+    }
+
+    [HttpGet("sta/{statusId}")]
+    public async Task<ActionResult<List<Post>>> GetStatus(int statusId){
+        var statuses = await _context.Posts
+        .Where(p => p.PostStatusId == statusId)
+        .Include(p => p.Apartment)
+        .ToListAsync();
+        return Ok(statuses);
+    }
+
+    [HttpGet("sear/{searchString}")]
+    public async Task<ActionResult<List<Post>>> GetSearch(string searchString){
+        var searchStrgs = await _context.Posts
+        .Where(p => p.Title!.Contains(searchString))
+        .Include(p => p.Apartment)
+        .ToListAsync();
+        return Ok(searchStrgs);
     }
 }

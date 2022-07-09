@@ -8,7 +8,7 @@ public class Post{
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int PostId {get; set;}
     [Required]
-    [StringLength(50)]
+    [StringLength(200)]
     public string Title {get; set;} = string.Empty;
     [Required]
     public float Price {get; set;}
@@ -20,17 +20,17 @@ public class Post{
     public DateTime DateCreate {get; set;}
 
     // One-to-One Relationship
+    public Apartment? Apartment {get; set;}
+    public int ApartmentId {get; set;}
+    //------------------------
+
+    //One-to-Many Relationship
     public PostStatus? PostStatus {get; set;}
     public int PostStatusId {get; set;}
 
     public PostType? PostType {get; set;}
     public int PostTypeId {get; set;}
 
-    public Apartment? Apartment {get; set;}
-    public int ApartmentId {get; set;}
-    //------------------------
-
-    //One-to-Many Relationship
     public Owner? Owner {get; set;}
     public int OwnerId {get; set;}
     //------------------------

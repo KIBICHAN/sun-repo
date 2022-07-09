@@ -23,7 +23,7 @@ public class Apartment{
     [StringLength(30)]
     public string LegalInformation{get; set;} = string.Empty; 
     [Required]
-    [StringLength(200)]
+    [MaxLength]
     public string ApartmentImgUrl {get; set;} = string.Empty;
 
     //One-to-One Relationship

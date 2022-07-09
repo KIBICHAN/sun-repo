@@ -10,7 +10,7 @@ public class PostType{
     [StringLength(12)]
     public string TypeDescription{get; set;} = string.Empty;
 
-    // One-to-One Relationship
-    public Post? Post {get; set;}
+    //One-to-Many Relationship
+    public List<Post>? Posts {get; set;}
     //------------------------
 }

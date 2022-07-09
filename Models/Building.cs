@@ -16,10 +16,10 @@ public class Building{
     [StringLength(100)]
     [Required]
     public string Location{get; set;} = string.Empty;
-    [StringLength(200)]
+    [MaxLength]
     [Required]
     public string LocationImgUrl{get; set;} = string.Empty;
-    [StringLength(300)]
+    [MaxLength]
     [Required]
     public string BuildingImgUrl{get; set;} = string.Empty;
 
