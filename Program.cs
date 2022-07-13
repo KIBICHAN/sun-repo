@@ -3,7 +3,9 @@ using ApartRent.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse("10.1.136.187"), 7132));
+//IPv4 Library (10.1.136.187)
+//IPv4 Home (192.168.1.8)
 // Add services to the container.
 
 // builder.Services.AddControllers();

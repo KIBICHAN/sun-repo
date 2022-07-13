@@ -30,6 +30,11 @@ public class PostController : ControllerBase{
         .Include(p => p.Apartment)
         .ThenInclude(p => p!.Building)
         .Include(p => p.Owner).FirstOrDefaultAsync(p => p.PostId == id);
+
+        if(post == null){
+            return BadRequest("Post not found.");
+        }
+
         return Ok(post);
     }
 
@@ -39,15 +44,36 @@ public class PostController : ControllerBase{
         .Where(p => p.PostStatusId == statusId)
         .Include(p => p.Apartment)
         .ToListAsync();
+
+        if(statuses == null){
+            return BadRequest("Post not found.");
+        }
+
         return Ok(statuses);
     }
 
-    [HttpGet("sear/{searchString}")]
-    public async Task<ActionResult<List<Post>>> GetSearch(string searchString){
-        var searchStrgs = await _context.Posts
-        .Where(p => p.Title!.Contains(searchString))
-        .Include(p => p.Apartment)
-        .ToListAsync();
-        return Ok(searchStrgs);
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<List<Post>>> DeletePost(int id){
+        var post = await _context.Posts
+        .Where(p => p.PostId == id)
+        .SingleOrDefaultAsync();
+
+        var apart = await _context.Apartments
+        .Where(a => a.ApartmentId == id)
+        .SingleOrDefaultAsync();
+        
+        if(post == null){
+            return BadRequest("Hero not found.");
+        }
+        if(apart == null){
+            return BadRequest("Apartment not found.");
+        }
+
+        _context.Posts.Remove(post);
+        _context.Apartments.Remove(apart);
+
+        await _context.SaveChangesAsync();
+        
+        return NoContent();
     }
 }
