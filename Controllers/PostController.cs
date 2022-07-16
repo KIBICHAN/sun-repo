@@ -22,6 +22,20 @@ public class PostController : ControllerBase{
         return Ok(posts);
     }
 
+    [HttpGet("sta/{statusId}")]
+    public async Task<ActionResult<List<Post>>> GetStatus(int statusId){
+        var statuses = await _context.Posts
+        .Where(p => p.PostStatusId == statusId)
+        .Include(p => p.Apartment)
+        .ToListAsync();
+
+        if(statuses == null){
+            return BadRequest("Post not found.");
+        }
+
+        return Ok(statuses);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<Post>> Get(int id){
         var post = await _context.Posts
@@ -38,22 +52,21 @@ public class PostController : ControllerBase{
         return Ok(post);
     }
 
-    [HttpGet("sta/{statusId}")]
-    public async Task<ActionResult<List<Post>>> GetStatus(int statusId){
-        var statuses = await _context.Posts
-        .Where(p => p.PostStatusId == statusId)
-        .Include(p => p.Apartment)
-        .ToListAsync();
-
-        if(statuses == null){
-            return BadRequest("Post not found.");
+    [HttpPut("{id}")]
+    public async Task<ActionResult<Post>> PutStatusDeactivate(int id, int status){
+        var _post = await _context.Posts.FindAsync(id);
+        if(_post == null){
+            return BadRequest("Post not found!");
         }
 
-        return Ok(statuses);
+        _post.PostStatusId = status;
+
+        await _context.SaveChangesAsync();
+        return Ok(_post);
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<List<Post>>> DeletePost(int id){
+    public async Task<ActionResult<List<Post>>> Delete(int id){
         var post = await _context.Posts
         .Where(p => p.PostId == id)
         .SingleOrDefaultAsync();
@@ -74,6 +87,6 @@ public class PostController : ControllerBase{
 
         await _context.SaveChangesAsync();
         
-        return NoContent();
+        return Ok(await _context.Posts.ToListAsync());
     }
 }
